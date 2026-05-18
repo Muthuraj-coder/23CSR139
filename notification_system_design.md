@@ -357,7 +357,7 @@ This improves speed and reliability.
 
 --- 
 
-### Stage 6 
+## Stage 6 
 
 # Stage 6
 
