@@ -13,11 +13,11 @@ The system includes:
 
 
 Students can receive notifications related to:
-- Placements
-- Results
-- Events
+    - Placements
+    - Results
+    - Events
 
-In this project, I designed APIs for sending and fetching notifications. I also designed the database structure to store notification details.
+In this project, I have designed APIs for sending and fetching notifications. I also designed the database structure to store notification details.
 
 As the number of notifications increases, the system can become slow. So I added solutions like indexing, pagination, caching, and real-time notifications to improve performance.
 

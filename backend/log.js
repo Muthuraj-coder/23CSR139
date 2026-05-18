@@ -22,7 +22,7 @@ async function Log(stack, level, packageName, message) {
       }
     );
 
-    console.log("Log created:", response.data);
+    console.log("Log created :", response.data);
   } catch (error) {
     console.log(
       error.response?.data || error.message

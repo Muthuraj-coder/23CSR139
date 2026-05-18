@@ -33,7 +33,7 @@ async function getTopNotifications() {
 
     const top10 = notifications.slice(0, 10);
 
-    console.log("\nTop 10 Priority Notifications\n");
+    console.log("\nTop 10 Priority Notifications: \n");
 
     top10.forEach((notification, index) => {
       console.log(
