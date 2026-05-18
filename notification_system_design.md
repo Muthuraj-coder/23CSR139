@@ -242,4 +242,64 @@ DELETE FROM notifications
 WHERE id = 'n101';
 ```
 
+# Stage 3
 
+## Is the Query Correct?
+
+```sql
+SELECT * FROM notifications
+WHERE studentID = 1042
+AND isRead = false
+ORDER BY createdAt DESC;
+```
+
+Yes, the query is correct because it fetches unread notifications of a student sorted by latest notifications first.
+
+---
+
+## Why Is It Slow?
+
+The database contains:
+
+- 50,000 students
+- 5,000,000 notifications
+
+This is because of indexing is not Set to the column .
+If we Add Indexing to the Field , then instead of searching all the rows , it will find based on the index 
+In the last line of the query we are using ORDERBY that is Sorting is Done here . So here also it will increase the latency
+---
+
+## Solution
+
+Add a index:
+
+```sql
+CREATE INDEX idx_student_read_created
+ON notifications(studentId, isRead, createdAt DESC);
+
+```
+---
+
+
+## Should We Add Indexes on Every Column?
+
+No.
+
+DisAdvantages - If we want to improve the query , and we creating index for all the fields means .. then index will be stored in DB . storage of the DB will increase 
+
+Adding indexes on every column is not preferred
+
+Indexes should be added only for frequently searched or filtered columns.
+
+---
+
+## Query to Find Students Who Received Placement Notifications in Last 7 Days
+
+```sql
+SELECT DISTINCT studentId
+FROM notifications
+WHERE type = 'Placement'
+AND createdAt >= NOW() - INTERVAL '7 days';
+```
+
+---
