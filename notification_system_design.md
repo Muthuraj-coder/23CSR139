@@ -303,3 +303,26 @@ AND createdAt >= NOW() - INTERVAL '7 days';
 ```
 
 ---
+
+# Stage 4
+
+Fetching notifications on every page load increases database load and slows down the application.
+
+## Improvements
+
+### Use Caching
+
+Unread notifications can be temporarily stored in cache.  
+This reduces repeated database queries.
+
+### Use Pagination
+
+Load notifications in smaller batches instead of fetching all records.
+Example: GET /notifications?page=1&limit=20
+
+
+### Use Real-Time Notifications
+Using WebSocket reduces repeated API calling because notifications are pushed instantly to the user.
+
+---
+
