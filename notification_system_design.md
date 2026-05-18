@@ -1,12 +1,12 @@
-# Stage 1
+### Stage 1
 
-## Notification System REST API Design
+### Notification System REST API Design
 
 The notification system is used to send placement, event and result updates to students.
 
-# Base URL: ```http:/api/v1 ```
+### Base URL: ```http:/api/v1 ```
 
-# Headers:```http Content-Type: application/json Authorization: Bearer <token> ```
+### Headers:```http Content-Type: application/json Authorization: Bearer <token> ```
 
 ---
 
@@ -134,3 +134,112 @@ When a student logs into the application, the frontend creates a WebSocket conne
 This helps students receive  updates quickly and also reduces repeated API requests to the server.
 
 ---
+
+
+### Stage 2
+
+## Database Choice
+
+I prefer PostgreSQL for this notification system.
+
+Reason:
+    - Notification data is structured (That means it is predefined if it is not predefined we can go for NoSQL like MongoDB) 
+    - Easy to store data
+    - SQL queries are simple
+    - Supports indexing
+
+---
+
+### Tables
+
+## students
+```sql
+CREATE TABLE students (
+    id INT PRIMARY KEY, ```(Act as a relation B/w Notification Table)```
+    name VARCHAR(100),
+    email VARCHAR(100)
+);
+```
+
+### notifications
+```sql
+CREATE TABLE notifications (
+    id UUID PRIMARY KEY,
+    studentId INT,
+    type VARCHAR(20),
+    message TEXT,
+    isRead BOOLEAN DEFAULT FALSE,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (studentId) REFERENCES students(id)
+);
+```
+
+---
+
+## Problems When Data Grows
+
+- Queries from the DB may get slower that is retrival time
+- Database load increases
+
+---
+
+### Solutions
+
+## Indexing - It Improves the speed of the searching by making the unique column as index . this make the quering easier and retrival faster
+
+## DisAdvantages - If we want to improve the query , and we creating index for all the fields means .. then index will be stored in DB .. storage of the DB will increase 
+
+### Add Index
+
+```sql
+CREATE INDEX idx_student_read
+ON notifications(studentId, isRead);
+```
+
+### Queries
+
+## Insert Notification
+
+```sql
+INSERT INTO notifications(id, studentId, type, message)
+VALUES (
+    gen_random_uuid(),
+    1042,
+    'Placement',
+    'TCS hiring drive starts tomorrow'
+);
+```
+
+## Get All Notifications
+
+```sql
+SELECT * FROM notifications
+WHERE studentId = 1042
+ORDER BY createdAt DESC;
+```
+
+## Get Unread Notifications
+
+```sql
+SELECT * FROM notifications
+WHERE studentId = 1042
+AND isRead = false;
+```
+
+## Mark Notification as Read
+
+```sql
+UPDATE notifications
+SET isRead = true
+WHERE id = 'n101';
+```
+
+## Delete Notification
+
+```sql
+DELETE FROM notifications
+WHERE id = 'n101';
+```
+
+
