@@ -326,3 +326,51 @@ Using WebSocket reduces repeated API calling because notifications are pushed in
 
 ---
 
+# Stage 5
+
+## Problems
+
+- Sending notifications one by one is slow
+- If email fails in between, some students didn't get the Email notification
+
+---
+
+## Better Solution
+
+- Save notification to DB first
+- Add email sending to queue
+- Process emails separately
+- Retry failed emails later
+
+This improves speed and reliability.
+
+---
+
+## Pseudocode
+
+```
+# notify_all
+        save to db
+        add email_job
+        push to application
+```
+
+--- 
+
+### Stage 6 
+
+# Stage 6
+
+Priority notifications are selected based on notification type and latest timestamp.
+
+Priority order used:
+
+1. Placement
+2. Result
+3. Event
+
+If two notifications have the same type, the latest notification is given higher priority.
+
+The notifications are fetched from the given API and sorted using the above logic. After sorting, the top 10 notifications are displayed.
+
+For handling new incoming notifications efficiently, a min heap or sorted structure can be maintained to keep track of the current top 10 notifications.
